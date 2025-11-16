@@ -2,60 +2,56 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>항만 크레인 Anti-Sway 프로젝트</title>
+  <title>Port Crane Anti-Sway Project</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
     body {
       margin: 0;
+      padding: 0;
+      background: #f4f4f4;
       font-family: "Segoe UI", sans-serif;
-      background: #fafafa;
       color: #222;
     }
 
     header {
       background: #0047ab;
       color: white;
-      padding: 30px;
+      padding: 40px;
       text-align: center;
-    }
-
-    nav {
-      background: #eaeaea;
-      padding: 10px 20px;
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      font-weight: bold;
-    }
-
-    nav a {
-      color: #0047ab;
-      text-decoration: none;
-    }
-    nav a:hover {
-      text-decoration: underline;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 800px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 30px 20px;
     }
 
-    section {
-      margin-bottom: 60px;
-      padding: 20px;
+    .menu-box {
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
     }
 
-    h2 { color: #0047ab; }
+    .menu-box:hover {
+      transform: translateY(-3px);
+      transition: 0.2s;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.15);
+    }
+
+    a {
+      text-decoration: none;
+      color: #0047ab;
+      font-weight: bold;
+      font-size: 1.3em;
+    }
+
     footer {
-      text-align: center;
+      margin-top: 50px;
       padding: 30px;
-      margin-top: 60px;
+      text-align: center;
       color: #666;
     }
   </style>
@@ -65,48 +61,35 @@
 
 <header>
   <h1>항만 크레인 Anti-Sway 프로젝트</h1>
-  <p>(기본 구조 / 템플릿)</p>
+  <p>Project Documentation Portal</p>
 </header>
-
-<nav>
-  <a href="#about">프로젝트 소개</a>
-  <a href="#model">물리 모델</a>
-  <a href="#control">제어 알고리즘</a>
-  <a href="#sim">시뮬레이션</a>
-  <a href="#repo">GitHub</a>
-</nav>
 
 <div class="container">
 
-  <section id="about">
-    <h2>1. 프로젝트 소개</h2>
-    <p>→ 여기에 프로젝트 개요를 직접 작성하세요.</p>
-  </section>
+  <div class="menu-box">
+    <a href="overview.html">1. 프로젝트 개요</a>
+  </div>
 
-  <section id="model">
-    <h2>2. 물리 모델(Dynamics)</h2>
-    <p>→ 진자 모델 및 항만 크레인 구조 설명을 추가하세요.</p>
-  </section>
+  <div class="menu-box">
+    <a href="model.html">2. 물리 모델 (Dynamics)</a>
+  </div>
 
-  <section id="control">
-    <h2>3. 제어 알고리즘(Control)</h2>
-    <p>→ Anti-sway 제어 방식 PD / Input Shaping / FBL 등을 정리하세요.</p>
-  </section>
+  <div class="menu-box">
+    <a href="control.html">3. 제어 알고리즘 (Control Methods)</a>
+  </div>
 
-  <section id="sim">
-    <h2>4. 시뮬레이션 결과</h2>
-    <p>→ Python / JS / MATLAB 등 시뮬레이션 결과를 넣으세요.</p>
-  </section>
+  <div class="menu-box">
+    <a href="simulation.html">4. 시뮬레이션 결과</a>
+  </div>
 
-  <section id="repo">
-    <h2>5. GitHub Repository</h2>
-    <p>→ 여기 링크를 붙이세요.</p>
-  </section>
+  <div class="menu-box">
+    <a href="reference.html">5. 참고문헌 및 자료</a>
+  </div>
 
 </div>
 
 <footer>
-  Base Template for Anti-Sway Project © 2025
+  © 2025 Port Crane Anti-Sway Documentation
 </footer>
 
 </body>
