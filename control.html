@@ -2,18 +2,26 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>제어 알고리즘</title>
+  <title>Control Methods</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
     body { margin: 0; background: #fafafa; font-family: "Segoe UI", sans-serif; }
     header { background: #0047ab; color: white; padding: 25px; text-align: center; }
+
+    .navbar { background: #003d99; padding: 12px 20px; display: flex; gap: 20px; justify-content: center; }
+    .navbar a {
+      color: white; font-weight: bold; text-decoration: none;
+      padding: 5px 10px; border-radius: 6px; font-size: 1.05em;
+    }
+    .navbar a.active { background: white; color: #003d99; }
+
     .container {
       max-width: 900px; margin: 0 auto; padding: 25px;
       background: white; border-radius: 10px;
-      margin-top: 25px; box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      margin-top: 20px; box-shadow: 0 3px 12px rgba(0,0,0,0.1);
     }
-    a { color: #0047ab; font-weight: bold; }
+
     footer { text-align: center; padding: 30px; color: #666; }
   </style>
 </head>
@@ -22,18 +30,33 @@
 
 <header>
   <h1>3. 제어 알고리즘</h1>
-  <p>PD Control, Input Shaping, FBL 등</p>
 </header>
 
-<div class="container">
-  <h2>📘 여기에 제어 알고리즘 설명을 작성하세요</h2>
+<nav class="navbar">
+  <a href="index.html">Home</a>
+  <a href="overview.html">Overview</a>
+  <a href="model.html">Model</a>
+  <a href="control.html">Control</a>
+  <a href="simulation.html">Simulation</a>
+  <a href="reference.html">Reference</a>
+</nav>
 
-  <p><a href="index.html">← 메인으로 돌아가기</a></p>
+<div class="container">
+  <h2>제어 알고리즘</h2>
+  <p>여기에 제어 알고리즘 내용을 작성하세요.</p>
 </div>
 
 <footer>
   © 2025 Port Crane Anti-Sway Project
 </footer>
+
+<script>
+  const currentPage = window.location.pathname.split('/').pop();
+  document.querySelectorAll('.navbar a').forEach(link => {
+    if (currentPage === link.getAttribute('href')) link.classList.add('active');
+    if (!currentPage && link.getAttribute('href') === "index.html") link.classList.add('active');
+  });
+</script>
 
 </body>
 </html>
