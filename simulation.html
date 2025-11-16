@@ -77,137 +77,6 @@
 
 <body>
 
-<!-- ============================
-     Single Pendulum Anti-Sway Block
-     ============================ -->
-<div style="padding:20px; border:1px solid #ddd; border-radius:10px; margin-top:20px;">
-  <h2>Single Pendulum Anti-Sway Simulation</h2>
-
-  <canvas id="pendulumCanvas" width="600" height="400" style="border:1px solid #ccc; background:#fafafa;"></canvas>
-
-  <div style="margin-top:15px;">
-    <button id="startSim">Start</button>
-    <button id="stopSim">Stop</button>
-    <button id="resetSim">Reset</button>
-  </div>
-</div>
-
-<script>
-// ===== Physics Parameters =====
-let g2 = 9.81;
-let L2 = 1.0;
-
-// State variables
-let theta2 = 20 * Math.PI/180;
-let omega2 = 0;
-let px2 = 0;     // Pivot position
-let pv2 = 0;     // Pivot velocity
-
-// Time
-let dt2 = 0.01;
-
-// Control gains (PD for pivot)
-let Kp2 = 2.0;
-let Kd2 = 3.0;
-let Kt2 = 40.0;
-
-let animationID2 = null;
-
-// Canvas
-const canvas2 = document.getElementById("pendulumCanvas");
-const ctx2 = canvas2.getContext("2d");
-
-// ===== Drawing Function =====
-function drawPendulum2() {
-  ctx2.clearRect(0,0,canvas2.width,canvas2.height);
-
-  // Canvas origin
-  const originX = canvas2.width/2 + px2 * 150;
-  const originY = 80;
-
-  const bobX = originX + L2 * 150 * Math.sin(theta2);
-  const bobY = originY + L2 * 150 * Math.cos(theta2);
-
-  // Grid background
-  ctx2.strokeStyle = "#eee";
-  for (let x=0; x<canvas2.width; x+=40){
-    ctx2.beginPath();
-    ctx2.moveTo(x, 0);
-    ctx2.lineTo(x, canvas2.height);
-    ctx2.stroke();
-  }
-  for (let y=0; y<canvas2.height; y+=40){
-    ctx2.beginPath();
-    ctx2.moveTo(0, y);
-    ctx2.lineTo(canvas2.width, y);
-    ctx2.stroke();
-  }
-
-  // Rod
-  ctx2.strokeStyle = "#333";
-  ctx2.lineWidth = 3;
-  ctx2.beginPath();
-  ctx2.moveTo(originX, originY);
-  ctx2.lineTo(bobX, bobY);
-  ctx2.stroke();
-
-  // Bob
-  ctx2.beginPath();
-  ctx2.arc(bobX, bobY, 12, 0, 2*Math.PI);
-  ctx2.fillStyle = "#d35400";
-  ctx2.fill();
-
-  // Pivot
-  ctx2.beginPath();
-  ctx2.arc(originX, originY, 8, 0, 2*Math.PI);
-  ctx2.fillStyle = "#2c3e50";
-  ctx2.fill();
-}
-
-// ===== RK4 Update =====
-function stepSim2() {
-  let a_pivot = -(Kp2 * px2 + Kd2 * pv2 + Kt2 * theta2);
-
-  let alpha = -(g2/L2)*Math.sin(theta2) - (a_pivot/L2)*Math.cos(theta2);
-
-  omega2 += alpha * dt2;
-  theta2 += omega2 * dt2;
-
-  pv2 += a_pivot * dt2;
-  px2 += pv2 * dt2;
-
-  drawPendulum2();
-}
-
-// ===== Animation Loop =====
-function loop2() {
-  stepSim2();
-  animationID2 = requestAnimationFrame(loop2);
-}
-
-// ===== Buttons =====
-document.getElementById("startSim").onclick = () => {
-  if (!animationID2) loop2();
-};
-
-document.getElementById("stopSim").onclick = () => {
-  cancelAnimationFrame(animationID2);
-  animationID2 = null;
-};
-
-document.getElementById("resetSim").onclick = () => {
-  theta2 = 20 * Math.PI/180;
-  omega2 = 0;
-  px2 = 0;
-  pv2 = 0;
-  drawPendulum2();
-};
-
-// Initial draw
-drawPendulum2();
-</script>
-
-
 <header>
   <h1>시뮬레이션</h1>
 </header>
@@ -223,9 +92,184 @@ drawPendulum2();
 
 <div class="container">
   <h2>시뮬레이션 결과</h2>
-  <p>여기에 시뮬레이션 결과를 작성하세요.</p>
-</div>
+<h2>시뮬레이션 결과</h2>
+  <p>아래는 Anti-Sway Single Pendulum 시뮬레이션입니다.</p>
 
+  <!-- ============================
+       Single Pendulum Anti-Sway Block
+       ============================ -->
+  <div style="padding:20px; border:1px solid #ddd; border-radius:10px; margin-top:20px;">
+    <h3>Single Pendulum Anti-Sway Simulation</h3>
+
+    <canvas id="pendulumCanvas" width="600" height="400" 
+            style="border:1px solid #ccc; background:#fafafa;"></canvas>
+
+    <div style="margin-top:15px;">
+      <button id="startSim">Start</button>
+      <button id="stopSim">Stop</button>
+      <button id="resetSim">Reset</button>
+    </div>
+  </div>
+
+</div> <!-- container 끝 -->
+
+
+<!-- ============================
+     JS (Python Model 1:1 적용)
+     ============================ -->
+<script>
+// ===========================
+//   Physics Parameters
+// ===========================
+let g = 9.81;
+let L = 1.0;
+let dt = 0.01;
+
+let theta = 20 * Math.PI/180;
+let omega = 0;
+
+let px = 0, pv = 0, pa = 0;
+let px_target = 0;
+
+// Gains (Python 동일)
+let Kp_x = 2.0, Kd_x = 3.0;
+let Kp_theta = 40.0, Kd_omega = 15.0;
+let pa_limit = 15.0;
+
+// Canvas
+const canvas = document.getElementById("pendulumCanvas");
+const ctx = canvas.getContext("2d");
+let animationID = null;
+
+
+// ===========================
+//       RK4 Integrator
+// ===========================
+function f(theta, omega, pa) {
+    let dtheta = omega;
+    let domega = -(g/L)*Math.sin(theta) - (pa/L)*Math.cos(theta);
+    return [dtheta, domega];
+}
+
+function rk4(theta, omega, pa, dt) {
+    let [k1_t, k1_w] = f(theta, omega, pa);
+    let [k2_t, k2_w] = f(theta + 0.5*dt*k1_t, omega + 0.5*dt*k1_w, pa);
+    let [k3_t, k3_w] = f(theta + 0.5*dt*k2_t, omega + 0.5*dt*k2_w, pa);
+    let [k4_t, k4_w] = f(theta + dt*k3_t, omega + dt*k3_w, pa);
+
+    theta += dt*(k1_t + 2*k2_t + 2*k3_t + k4_t)/6;
+    omega += dt*(k1_w + 2*k2_w + 2*k3_w + k4_w)/6;
+    return [theta, omega];
+}
+
+
+// ===========================
+//         Drawing
+// ===========================
+function drawPendulum() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    // Grid
+    ctx.strokeStyle = "#eee";
+    for (let x=0; x<canvas.width; x+=40){
+        ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height);
+        ctx.stroke();
+    }
+    for (let y=0; y<canvas.height; y+=40){
+        ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y);
+        ctx.stroke();
+    }
+
+    let originX = canvas.width/2 + px*150;
+    let originY = 80;
+
+    let bobX = originX + L*150*Math.sin(theta);
+    let bobY = originY + L*150*Math.cos(theta);
+
+    // Rod
+    ctx.strokeStyle="#333"; ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.moveTo(originX,originY);
+    ctx.lineTo(bobX,bobY);
+    ctx.stroke();
+
+    // Bob
+    ctx.beginPath();
+    ctx.arc(bobX,bobY,12,0,Math.PI*2);
+    ctx.fillStyle="#d35400";
+    ctx.fill();
+
+    // Pivot
+    ctx.beginPath();
+    ctx.arc(originX,originY,8,0,Math.PI*2);
+    ctx.fillStyle="#2c3e50";
+    ctx.fill();
+}
+
+
+// ===========================
+//     Simulation Update
+// ===========================
+function step() {
+
+    // ---- Anti-Sway Controller (Python 동일) ----
+    let a_pos   = Kp_x * (px_target - px) + Kd_x * (0 - pv);
+    let a_angle = Kp_theta * theta + Kd_omega * omega;
+
+    pa = a_pos + a_angle;
+    pa = Math.max(-pa_limit, Math.min(pa, pa_limit));
+
+    // Pivot update
+    px += pv * dt;
+    pv += pa * dt;
+
+    // Pendulum RK4 update
+    [theta, omega] = rk4(theta, omega, pa, dt);
+
+    drawPendulum();
+}
+
+function loop() {
+    step();
+    animationID = requestAnimationFrame(loop);
+}
+
+
+// ===========================
+//         Buttons
+// ===========================
+document.getElementById("startSim").onclick = () => {
+    if (!animationID) loop();
+};
+
+document.getElementById("stopSim").onclick = () => {
+    cancelAnimationFrame(animationID);
+    animationID = null;
+};
+
+document.getElementById("resetSim").onclick = () => {
+    theta = 20*Math.PI/180;
+    omega = 0;
+    px = 0; pv = 0; pa = 0;
+    px_target = 0;
+    drawPendulum();
+};
+
+
+// ===========================
+//      Keyboard Input
+// ===========================
+document.addEventListener("keydown", (e)=>{
+    if (e.key === "ArrowRight") px_target += 1.0;
+    if (e.key === "ArrowLeft")  px_target -= 1.0;
+});
+
+
+// Initial Draw
+drawPendulum();
+</script>
+
+  
 <footer>
   © 2025 Port Crane Anti-Sway Project
 </footer>
