@@ -77,6 +77,137 @@
 
 <body>
 
+<!-- ============================
+     Single Pendulum Anti-Sway Block
+     ============================ -->
+<div style="padding:20px; border:1px solid #ddd; border-radius:10px; margin-top:20px;">
+  <h2>Single Pendulum Anti-Sway Simulation</h2>
+
+  <canvas id="pendulumCanvas" width="600" height="400" style="border:1px solid #ccc; background:#fafafa;"></canvas>
+
+  <div style="margin-top:15px;">
+    <button id="startSim">Start</button>
+    <button id="stopSim">Stop</button>
+    <button id="resetSim">Reset</button>
+  </div>
+</div>
+
+<script>
+// ===== Physics Parameters =====
+let g2 = 9.81;
+let L2 = 1.0;
+
+// State variables
+let theta2 = 20 * Math.PI/180;
+let omega2 = 0;
+let px2 = 0;     // Pivot position
+let pv2 = 0;     // Pivot velocity
+
+// Time
+let dt2 = 0.01;
+
+// Control gains (PD for pivot)
+let Kp2 = 2.0;
+let Kd2 = 3.0;
+let Kt2 = 40.0;
+
+let animationID2 = null;
+
+// Canvas
+const canvas2 = document.getElementById("pendulumCanvas");
+const ctx2 = canvas2.getContext("2d");
+
+// ===== Drawing Function =====
+function drawPendulum2() {
+  ctx2.clearRect(0,0,canvas2.width,canvas2.height);
+
+  // Canvas origin
+  const originX = canvas2.width/2 + px2 * 150;
+  const originY = 80;
+
+  const bobX = originX + L2 * 150 * Math.sin(theta2);
+  const bobY = originY + L2 * 150 * Math.cos(theta2);
+
+  // Grid background
+  ctx2.strokeStyle = "#eee";
+  for (let x=0; x<canvas2.width; x+=40){
+    ctx2.beginPath();
+    ctx2.moveTo(x, 0);
+    ctx2.lineTo(x, canvas2.height);
+    ctx2.stroke();
+  }
+  for (let y=0; y<canvas2.height; y+=40){
+    ctx2.beginPath();
+    ctx2.moveTo(0, y);
+    ctx2.lineTo(canvas2.width, y);
+    ctx2.stroke();
+  }
+
+  // Rod
+  ctx2.strokeStyle = "#333";
+  ctx2.lineWidth = 3;
+  ctx2.beginPath();
+  ctx2.moveTo(originX, originY);
+  ctx2.lineTo(bobX, bobY);
+  ctx2.stroke();
+
+  // Bob
+  ctx2.beginPath();
+  ctx2.arc(bobX, bobY, 12, 0, 2*Math.PI);
+  ctx2.fillStyle = "#d35400";
+  ctx2.fill();
+
+  // Pivot
+  ctx2.beginPath();
+  ctx2.arc(originX, originY, 8, 0, 2*Math.PI);
+  ctx2.fillStyle = "#2c3e50";
+  ctx2.fill();
+}
+
+// ===== RK4 Update =====
+function stepSim2() {
+  let a_pivot = -(Kp2 * px2 + Kd2 * pv2 + Kt2 * theta2);
+
+  let alpha = -(g2/L2)*Math.sin(theta2) - (a_pivot/L2)*Math.cos(theta2);
+
+  omega2 += alpha * dt2;
+  theta2 += omega2 * dt2;
+
+  pv2 += a_pivot * dt2;
+  px2 += pv2 * dt2;
+
+  drawPendulum2();
+}
+
+// ===== Animation Loop =====
+function loop2() {
+  stepSim2();
+  animationID2 = requestAnimationFrame(loop2);
+}
+
+// ===== Buttons =====
+document.getElementById("startSim").onclick = () => {
+  if (!animationID2) loop2();
+};
+
+document.getElementById("stopSim").onclick = () => {
+  cancelAnimationFrame(animationID2);
+  animationID2 = null;
+};
+
+document.getElementById("resetSim").onclick = () => {
+  theta2 = 20 * Math.PI/180;
+  omega2 = 0;
+  px2 = 0;
+  pv2 = 0;
+  drawPendulum2();
+};
+
+// Initial draw
+drawPendulum2();
+</script>
+
+
 <header>
   <h1>시뮬레이션</h1>
 </header>
