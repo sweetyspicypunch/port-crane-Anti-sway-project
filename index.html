@@ -4,93 +4,103 @@
   <meta charset="UTF-8">
   <title>Port Crane Anti-Sway Project</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #f4f4f4;
-      font-family: "Segoe UI", sans-serif;
-      color: #222;
-    }
+    body { margin: 0; background: #fafafa; font-family: "Segoe UI", sans-serif; }
 
-    header {
-      background: #0047ab;
+    header { background: #0047ab; color: white; padding: 35px; text-align: center; }
+
+    /* --- Navbar 스타일 --- */
+    .navbar {
+      background: #003d99;
+      padding: 12px 20px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+    .navbar a {
       color: white;
-      padding: 40px;
-      text-align: center;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 1.05em;
+      padding: 5px 10px;
+      border-radius: 6px;
+    }
+    .navbar a.active {
+      background: white;
+      color: #003d99;
     }
 
     .container {
       max-width: 800px;
       margin: 0 auto;
       padding: 30px 20px;
+      background: white;
+      margin-top: 25px;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.1);
     }
 
     .menu-box {
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-      margin-bottom: 20px;
+      background: #f7f7f7;
+      padding: 18px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      font-size: 1.2em;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
+    .menu-box:hover { background: #eef2ff; }
 
-    .menu-box:hover {
-      transform: translateY(-3px);
-      transition: 0.2s;
-      box-shadow: 0 5px 18px rgba(0,0,0,0.15);
-    }
+    .menu-box a { text-decoration: none; color: #003d99; font-weight: bold; }
 
-    a {
-      text-decoration: none;
-      color: #0047ab;
-      font-weight: bold;
-      font-size: 1.3em;
-    }
-
-    footer {
-      margin-top: 50px;
-      padding: 30px;
-      text-align: center;
-      color: #666;
-    }
+    footer { margin-top: 40px; text-align: center; padding: 25px; color: #777; }
   </style>
 </head>
 
 <body>
 
 <header>
-  <h1>항만 크레인 Anti-Sway 프로젝트</h1>
-  <p>Project Documentation Portal</p>
+  <h1>Port Crane Anti-Sway Project</h1>
+  <p>Documentation Portal</p>
 </header>
+
+<nav class="navbar">
+  <a href="index.html">Home</a>
+  <a href="overview.html">Overview</a>
+  <a href="model.html">Model</a>
+  <a href="control.html">Control</a>
+  <a href="simulation.html">Simulation</a>
+  <a href="reference.html">Reference</a>
+</nav>
 
 <div class="container">
 
-  <div class="menu-box">
-    <a href="overview.html">1. 프로젝트 개요</a>
-  </div>
-
-  <div class="menu-box">
-    <a href="model.html">2. 물리 모델 (Dynamics)</a>
-  </div>
-
-  <div class="menu-box">
-    <a href="control.html">3. 제어 알고리즘 (Control Methods)</a>
-  </div>
-
-  <div class="menu-box">
-    <a href="simulation.html">4. 시뮬레이션 결과</a>
-  </div>
-
-  <div class="menu-box">
-    <a href="reference.html">5. 참고문헌 및 자료</a>
-  </div>
+  <div class="menu-box"><a href="overview.html">📘 1. 프로젝트 개요</a></div>
+  <div class="menu-box"><a href="model.html">⚙️ 2. 물리 모델 (Dynamics)</a></div>
+  <div class="menu-box"><a href="control.html">🎯 3. 제어 알고리즘</a></div>
+  <div class="menu-box"><a href="simulation.html">🧪 4. 시뮬레이션</a></div>
+  <div class="menu-box"><a href="reference.html">📚 5. 참고문헌 및 자료</a></div>
 
 </div>
 
 <footer>
-  © 2025 Port Crane Anti-Sway Documentation
+  © 2025 Port Crane Anti-Sway Project
 </footer>
+
+<script>
+  const currentPage = window.location.pathname.split('/').pop();
+  const links = document.querySelectorAll('.navbar a');
+
+  links.forEach(link => {
+    const linkPage = link.getAttribute('href');
+
+    if (!currentPage && linkPage === "index.html") {
+      link.classList.add('active');
+    }
+    if (currentPage === linkPage) {
+      link.classList.add('active');
+    }
+  });
+</script>
 
 </body>
 </html>
