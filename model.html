@@ -26,6 +26,55 @@
     }
 
     footer { text-align: center; padding: 30px; color: #666; }
+
+        /* ======= 모바일 최적화 영역 ======= */
+    @media (max-width: 600px) {
+    
+      /* 전체 컨테이너 패딩 축소 */
+      .container {
+        padding: 18px 15px;
+        margin-top: 15px;
+      }
+    
+      /* 헤더 글자 크기 축소 */
+      header h1 {
+        font-size: 1.6em;
+        line-height: 1.3em;
+      }
+    
+      /* 네비게이션 바 줄바꿈 허용 + 폰트 축소 */
+      .navbar {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .navbar a {
+        font-size: 0.9em;
+        padding: 6px 8px;
+      }
+    
+      /* 팀 박스 내부 패딩 축소 */
+      .team-box {
+        padding: 20px !important;
+      }
+    
+      /* 팀원 카드 1열로 강제 */
+      .team-grid {
+        grid-template-columns: 1fr !important;
+      }
+    
+      /* 팀원 카드 여백 조정 */
+      .member-card {
+        padding: 15px !important;
+      }
+    
+      /* 테이블 글자 크기 축소 (table 쓴 경우) */
+      table {
+        font-size: 0.95em;
+        word-break: keep-all; /* 글자 단위 줄바꿈 */
+      }
+    }
+
+    
   </style>
 </head>
 
